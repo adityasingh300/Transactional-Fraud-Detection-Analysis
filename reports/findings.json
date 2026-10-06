@@ -1,0 +1,73 @@
+{
+    "dataset_overview": {
+        "total_transactions": 284807,
+        "legitimate_count": 284315,
+        "fraudulent_count": 492,
+        "fraud_rate_pct": 0.1727,
+        "imbalance_ratio": "1 fraud per 578 legitimate transactions"
+    },
+    "amount_statistics": {
+        "overall_mean": 88.35,
+        "overall_median": 22.0,
+        "overall_max": 25691.16,
+        "legit_mean": 88.29,
+        "legit_median": 22.0,
+        "fraud_mean": 122.21,
+        "fraud_median": 9.25,
+        "fraud_max": 2125.87,
+        "fraud_total_financial_loss": 60127.97
+    },
+    "temporal_insights": {
+        "peak_fraud_rate_hour": 2,
+        "peak_fraud_rate_pct": 1.7127,
+        "time_duration_hours": 48.0,
+        "diurnal_finding": "Fraud rates spike significantly during late night/early morning hours (2:00 AM - 4:00 AM) when legitimate transaction volumes drop."
+    },
+    "correlation_analysis": {
+        "top_positive_correlated_features": [
+            {
+                "feature": "V11",
+                "correlation": 0.1549
+            },
+            {
+                "feature": "V4",
+                "correlation": 0.1334
+            },
+            {
+                "feature": "V2",
+                "correlation": 0.0913
+            },
+            {
+                "feature": "V21",
+                "correlation": 0.0404
+            },
+            {
+                "feature": "V19",
+                "correlation": 0.0348
+            }
+        ],
+        "top_negative_correlated_features": [
+            {
+                "feature": "V17",
+                "correlation": -0.3265
+            },
+            {
+                "feature": "V14",
+                "correlation": -0.3025
+            },
+            {
+                "feature": "V12",
+                "correlation": -0.2606
+            },
+            {
+                "feature": "V10",
+                "correlation": -0.2169
+            },
+            {
+                "feature": "V16",
+                "correlation": -0.1965
+            }
+        ],
+        "correlation_causation_note": "High statistical correlation indicates strong discriminatory power for classification, but does not imply direct physical causation due to PCA projection anonymity."
+    }
+}

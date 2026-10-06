@@ -1,0 +1,20 @@
+=== Baseline: Logistic Regression ===
+              precision    recall  f1-score   support
+
+           0     0.9998    0.9738    0.9866     56864
+           1     0.0563    0.9082    0.1060        98
+
+    accuracy                         0.9736     56962
+   macro avg     0.5281    0.9410    0.5463     56962
+weighted avg     0.9982    0.9736    0.9851     56962
+
+
+=== Comparison: Random Forest ===
+              precision    recall  f1-score   support
+
+           0     0.9997    0.9995    0.9996     56864
+           1     0.7547    0.8163    0.7843        98
+
+    accuracy                         0.9992     56962
+   macro avg     0.8772    0.9079    0.8920     56962
+weighted avg     0.9993    0.9992    0.9992     56962
