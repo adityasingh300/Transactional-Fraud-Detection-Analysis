@@ -37,8 +37,8 @@ env/
 # pytest cache
 .pytest_cache/
 
-# Streamlit config / cache
-.streamlit/
+# Streamlit cache only (keep config.toml for deployment)
+.streamlit/secrets.toml
 
 # OS generated files
 .DS_Store
