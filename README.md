@@ -4,7 +4,12 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Completed%20%26%20Validated-brightgreen.svg)]()
-[![Tests](https://img.shields.io/badge/Tests-8%20Passed%20(100%25)-success.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-10%20Passed%20(100%25)-success.svg)]()
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://transactional-fraud-detection-analysis.streamlit.app/)
+
+> 🚀 **Live Demo:** [transactional-fraud-detection-analysis.streamlit.app](https://transactional-fraud-detection-analysis.streamlit.app/)
+
+
 
 A comprehensive, end-to-end data analytics and machine learning internship project demonstrating financial transaction fraud detection using the real-world Kaggle ULB Credit Card Fraud dataset (284,807 transactions).
 
