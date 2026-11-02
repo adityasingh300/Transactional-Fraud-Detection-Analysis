@@ -949,3 +949,4 @@ with open(md_path, "w", encoding="utf-8") as f:
 with open(md_copy_path, "w", encoding="utf-8") as f:
     f.write(md_content.strip())
 print(f"2-Presenter Markdown guides saved at {md_path} and {md_copy_path}")
+
