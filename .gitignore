@@ -49,6 +49,8 @@ Thumbs.db
 !outputs/data_quality_report.csv
 !outputs/confusion_matrix.csv
 !outputs/logistic_regression_coefficients.csv
+!PowerBI/data/*.csv
+PowerBI/data/Fact_Transactions_Full.csv
 
 # Large SQLite database
 outputs/fraud_analysis.db

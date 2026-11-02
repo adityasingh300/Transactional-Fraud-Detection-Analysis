@@ -24,8 +24,9 @@ This project delivers:
 3. **Exploratory Data Analysis (EDA):** Identification of monetary patterns, diurnal vulnerability spikes, and latent feature correlations.
 4. **Leak-Free Machine Learning:** Scikit-Learn Pipelines training a baseline Logistic Regression (balanced) and comparison Random Forest classifier.
 5. **Interactive Streamlit Dashboard:** Multi-page dashboard with executive KPIs, transaction explorer, and real-time transaction scoring demo.
-6. **Automated Testing:** Pytest test suite validating data integrity, model inference, and artifact generation.
-7. **Complete Documentation & Slides:** 19-section analytical report, executive summary, 10-slide presentation in Markdown and PowerPoint (`.pptx`), and an executed Jupyter Notebook.
+6. **Executive Power BI Dashboard Suite:** Complete corporate fintech Power BI package (`PowerBI/`) with star-schema data models, 35+ enterprise DAX measures, executive dark theme, standalone interactive web dashboard, and PowerPoint presentation.
+7. **Automated Testing:** Pytest test suite validating data integrity, model inference, and artifact generation.
+8. **Complete Documentation & Slides:** 19-section analytical report, executive summary, 10-slide presentation in Markdown and PowerPoint (`.pptx`), and an executed Jupyter Notebook.
 
 ---
 

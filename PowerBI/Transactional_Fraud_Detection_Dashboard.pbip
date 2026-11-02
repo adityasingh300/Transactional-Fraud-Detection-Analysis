@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "artifacts": [
+    {
+      "report": {
+        "path": "Transactional_Fraud_Detection_Dashboard.Report"
+      }
+    }
+  ],
+  "settings": {
+    "enableAutoAuth": true
+  }
+}

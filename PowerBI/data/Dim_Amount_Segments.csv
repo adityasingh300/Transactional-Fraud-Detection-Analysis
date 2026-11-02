@@ -1,0 +1,7 @@
+Band_ID,Band_Label,Min_Amount,Max_Amount,Modus_Operandi,Typical_Action
+1,1. Micro (< ),0.0,4.99,Card Testing / Balance Probing,Flag rapid retry velocity
+2,2. Low ( - ),5.0,24.99,Digital Goods / Subscriptions,Merchant risk scoring
+3,3. Medium ( - ),25.0,99.99,General Retail Checkout,Standard friction-free
+4,4. High ( - ),100.0,499.99,Electronics / High-liquidity goods,Trigger Step-Up OTP if risk > 0.3
+5,"5. Very High ( - ,000)",500.0,1999.99,Large Wire / Luxury Theft,Mandatory 3DS Authentication
+6,"6. Extreme Outlier (,000+)",2000.0,999999.0,Account Takeover / Bulk Extraction,Immediate Freeze & Outbound Call

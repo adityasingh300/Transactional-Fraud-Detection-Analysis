@@ -1,0 +1,4 @@
+Tier_ID,Tier_Name,Risk_Min,Risk_Max,Policy_Action,Coverage_Volume_Pct,Customer_Friction,False_Alarm_Risk,SLA_Response
+1,Tier 1: Low Risk (< 30%),0.0,0.2999,Frictionless Auto-Approve,98.45,Zero Friction (< 50ms latency),Negligible,Immediate Real-Time
+2,Tier 2: Elevated Risk (30% - 70%),0.3,0.6999,Step-Up MFA / 3D-Secure Challenge,1.25,Biometric / SMS Push Challenge,Low (Legit users self-verify in 10s),Dynamic In-Session
+3,Tier 3: Critical Risk (>= 70%),0.7,1.0,Automatic Block & Urgent Alert,0.3,Card Freeze with Confirmation SMS,Strict Model Precision > 75%,< 5 Minutes Manual Review

@@ -1,0 +1,25 @@
+Hour_Of_Day,Hour_Label,Time_Period,Is_Vulnerability_Window,Total_Transactions,Fraud_Count,Fraud_Rate_Pct,Diurnal_Risk_Multiplier,Total_Volume_USD,Fraud_Loss_USD,Recommended_Protocol
+0,00:00,Late Night,Yes,7695,6,0.078,0.45,464208.26,1820.07,Strict (Adaptive 2FA on High Amounts)
+1,01:00,Late Night,Yes,4220,10,0.237,1.37,264325.45,1279.32,Strict (Adaptive 2FA on High Amounts)
+2,02:00,Late Night,Yes,3328,57,1.7127,9.91,233820.68,4517.98,Strict (Adaptive 2FA on High Amounts)
+3,03:00,Late Night,Yes,3492,17,0.4868,2.82,181852.16,233.91,Strict (Adaptive 2FA on High Amounts)
+4,04:00,Late Night,Yes,2209,23,1.0412,6.03,170179.23,1548.2,Strict (Adaptive 2FA on High Amounts)
+5,05:00,Late Night,Yes,2990,11,0.3679,2.13,151520.18,1416.67,Strict (Adaptive 2FA on High Amounts)
+6,06:00,Morning Rush,No,4101,9,0.2195,1.27,266812.2,1007.32,Standard
+7,07:00,Morning Rush,No,7243,23,0.3175,1.84,491209.1,2757.78,Standard
+8,08:00,Morning Rush,No,10276,9,0.0876,0.51,912213.29,430.99,Standard
+9,09:00,Morning Rush,No,15838,16,0.101,0.58,1628829.82,1255.41,Standard
+10,10:00,Morning Rush,No,16598,8,0.0482,0.28,1820354.38,2349.61,Standard
+11,11:00,Morning Rush,No,16856,53,0.3144,1.82,1847641.57,6570.73,Standard
+12,12:00,Afternoon Peak,No,15420,17,0.1102,0.64,1635221.81,3406.54,Standard
+13,13:00,Afternoon Peak,No,15365,17,0.1106,0.64,1520510.55,2194.48,Standard
+14,14:00,Afternoon Peak,No,16570,23,0.1388,0.8,1715632.94,3641.12,Standard
+15,15:00,Afternoon Peak,No,16461,26,0.1579,0.91,1679009.61,2234.09,Standard
+16,16:00,Afternoon Peak,No,16453,22,0.1337,0.77,1702609.91,4505.45,Standard
+17,17:00,Afternoon Peak,No,16166,29,0.1794,1.04,1589499.95,3373.5,Standard
+18,18:00,Evening,No,17039,33,0.1937,1.12,1316311.34,6345.14,Standard Monitoring
+19,19:00,Evening,No,15649,19,0.1214,0.7,1220410.35,2114.63,Standard Monitoring
+20,20:00,Evening,No,16756,18,0.1074,0.62,1249073.1,1510.41,Standard Monitoring
+21,21:00,Evening,No,17703,16,0.0904,0.52,1268615.18,1029.5,Standard Monitoring
+22,22:00,Evening,No,15441,9,0.0583,0.34,1078955.79,1442.0,Standard Monitoring
+23,23:00,Evening,No,10938,21,0.192,1.11,753773.16,3143.12,Standard Monitoring

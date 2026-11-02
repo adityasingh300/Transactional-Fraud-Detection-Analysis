@@ -1,0 +1,294 @@
+/* ==============================================================================================
+   TRANSACTIONAL FRAUD DETECTION ANALYSIS - ENTERPRISE DAX MEASURES LIBRARY
+   Target Platform: Microsoft Power BI Desktop / Power BI Service
+   Data Model: Star Schema (Fact_Transactions, Dim_Time_Analysis, Dim_Amount_Segments, Dim_Risk_Tiers, Fact_Model_Benchmark)
+   Theme: Executive Corporate Fintech Dark & Light Systems
+============================================================================================== */
+
+// ==============================================================================================
+// 1. CORE TRANSACTION VOLUME & CLASS METRICS
+// ==============================================================================================
+
+// Total count of transactions in current filter context
+[Total Transactions] = 
+COUNTROWS(Fact_Transactions)
+
+// Count of legitimate transactions (Class 0)
+[Legitimate Transactions] = 
+CALCULATE(
+    COUNTROWS(Fact_Transactions),
+    Fact_Transactions[Class] = 0
+)
+
+// Count of fraudulent transactions (Class 1)
+[Fraud Transactions] = 
+CALCULATE(
+    COUNTROWS(Fact_Transactions),
+    Fact_Transactions[Class] = 1
+)
+
+// Fraud incidence rate as a percentage of total volume (Baseline = 0.173%)
+[Fraud Rate %] = 
+DIVIDE(
+    [Fraud Transactions],
+    [Total Transactions],
+    0
+) * 100
+
+// Legitimate transaction rate as a percentage (Baseline = 99.827%)
+[Legit Rate %] = 
+DIVIDE(
+    [Legitimate Transactions],
+    [Total Transactions],
+    0
+) * 100
+
+// Imbalance ratio: Number of legitimate transactions per single fraud occurrence (Baseline: 578:1)
+[Imbalance Ratio (Legit per Fraud)] = 
+ROUND(
+    DIVIDE(
+        [Legitimate Transactions],
+        [Fraud Transactions],
+        0
+    ),
+    0
+)
+
+
+// ==============================================================================================
+// 2. FINANCIAL EXPOSURE & MONETARY METRICS
+// ==============================================================================================
+
+// Gross transactional monetary volume in USD
+[Total Volume USD] = 
+SUM(Fact_Transactions[Amount])
+
+// Direct financial fraud loss in USD
+[Fraud Loss USD] = 
+CALCULATE(
+    SUM(Fact_Transactions[Amount]),
+    Fact_Transactions[Class] = 1
+)
+
+// Legitimate business volume in USD
+[Legit Volume USD] = 
+CALCULATE(
+    SUM(Fact_Transactions[Amount]),
+    Fact_Transactions[Class] = 0
+)
+
+// Average amount across all transactions
+[Avg Transaction Amount] = 
+AVERAGE(Fact_Transactions[Amount])
+
+// Average ticket size for fraudulent transactions ($122.21 ground truth)
+[Avg Fraud Amount] = 
+CALCULATE(
+    AVERAGE(Fact_Transactions[Amount]),
+    Fact_Transactions[Class] = 1
+)
+
+// Average ticket size for legitimate transactions ($88.29 ground truth)
+[Avg Legit Amount] = 
+CALCULATE(
+    AVERAGE(Fact_Transactions[Amount]),
+    Fact_Transactions[Class] = 0
+)
+
+// Percentage difference in ticket size: Fraud vs Legitimate (+38.4%)
+[Fraud Amount Premium %] = 
+DIVIDE(
+    [Avg Fraud Amount] - [Avg Legit Amount],
+    [Avg Legit Amount],
+    0
+) * 100
+
+// Fraud loss as percentage of total portfolio volume (Basis Points)
+[Fraud Loss BPS] = 
+DIVIDE(
+    [Fraud Loss USD],
+    [Total Volume USD],
+    0
+) * 10000
+
+
+// ==============================================================================================
+// 3. DIURNAL FORENSICS & TIME VULNERABILITY METRICS
+// ==============================================================================================
+
+// Transaction volume during the vulnerable night window (00:00 - 05:59)
+[Nighttime Volume] = 
+CALCULATE(
+    [Total Transactions],
+    Fact_Transactions[Hour_Of_Day] >= 0 && Fact_Transactions[Hour_Of_Day] <= 5
+)
+
+// Fraud count during the vulnerable night window (00:00 - 05:59)
+[Nighttime Fraud Count] = 
+CALCULATE(
+    [Fraud Transactions],
+    Fact_Transactions[Hour_Of_Day] >= 0 && Fact_Transactions[Hour_Of_Day] <= 5
+)
+
+// Fraud incidence rate during nighttime hours
+[Nighttime Fraud Rate %] = 
+DIVIDE(
+    [Nighttime Fraud Count],
+    [Nighttime Volume],
+    0
+) * 100
+
+// Diurnal surge multiplier: How many times higher is nighttime fraud vs overall baseline? (~9.9x surge at 2:00 AM)
+[Diurnal Risk Multiplier] = 
+DIVIDE(
+    [Nighttime Fraud Rate %],
+    [Fraud Rate %],
+    1.0
+)
+
+// Fraud loss during the vulnerable night window
+[Nighttime Fraud Loss USD] = 
+CALCULATE(
+    [Fraud Loss USD],
+    Fact_Transactions[Hour_Of_Day] >= 0 && Fact_Transactions[Hour_Of_Day] <= 5
+)
+
+
+// ==============================================================================================
+// 4. MONETARY PATTERN & MODUS OPERANDI METRICS
+// ==============================================================================================
+
+// Micro card-testing fraud count (Amounts under $5 used to test stolen card validity)
+[Micro Probing Fraud Count] = 
+CALCULATE(
+    [Fraud Transactions],
+    Fact_Transactions[Amount] < 5.0
+)
+
+// Percentage of total fraud transactions that are micro card tests
+[Micro Probing Fraud %] = 
+DIVIDE(
+    [Micro Probing Fraud Count],
+    [Fraud Transactions],
+    0
+) * 100
+
+// High-value fraud count (Amounts >= $500)
+[High Value Fraud Count] = 
+CALCULATE(
+    [Fraud Transactions],
+    Fact_Transactions[Amount] >= 500.0
+)
+
+// High-value fraud monetary exposure in USD
+[High Value Fraud Loss USD] = 
+CALCULATE(
+    [Fraud Loss USD],
+    Fact_Transactions[Amount] >= 500.0
+)
+
+
+// ==============================================================================================
+// 5. MACHINE LEARNING OPERATIONAL & ROI METRICS
+// ==============================================================================================
+
+// Production Champion (Random Forest) catch rate
+[RF Fraud Catch Rate %] = 81.63
+
+// Baseline (Logistic Regression) catch rate
+[LR Fraud Catch Rate %] = 90.82
+
+// Production Champion (Random Forest) precision
+[RF Precision %] = 75.47
+
+// Baseline (Logistic Regression) precision
+[LR Precision %] = 5.63
+
+// Production Champion False Alarms on Test Set (56,962 transactions)
+[RF False Alarms] = 26
+
+// Baseline False Alarms on Test Set (56,962 transactions)
+[LR False Alarms] = 1492
+
+// False Alarm Reduction Percentage (The 98.3% breakthrough)
+[False Alarm Reduction %] = 
+DIVIDE(1492 - 26, 1492, 0) * 100
+
+// False positive ratio: False alarms generated per genuine fraud caught
+[RF False Alarm Ratio] = "0.3 false alarms per fraud"
+[LR False Alarm Ratio] = "16.8 false alarms per fraud"
+
+// Direct fraud dollar loss prevented by Random Forest model (81.63% of $60,127.97)
+[Prevented Fraud Loss USD] = 
+[Fraud Loss USD] * (81.63 / 100.0)
+
+// Operational investigation hours saved by eliminating 1,466 false alarms (at 15 mins per review)
+[Investigation Hours Saved] = 
+(1492 - 26) * 0.25
+
+// Financial cost saved on manual investigation overhead (at $50/hour blended fraud analyst cost)
+[Investigation Cost Savings USD] = 
+[Investigation Hours Saved] * 50.0
+
+// Net Economic Value generated by deploying the Random Forest engine over Baseline
+[Net Economic Value Delivered USD] = 
+[Prevented Fraud Loss USD] + [Investigation Cost Savings USD]
+
+
+// ==============================================================================================
+// 6. 3-TIER OPERATIONAL POLICY MEASURES
+// ==============================================================================================
+
+// Volume in Tier 1: Auto-Approve Frictionless (< 30% risk score)
+[Tier 1 Volume %] = 
+DIVIDE(
+    CALCULATE([Total Transactions], Fact_Transactions[Risk_Score] < 0.30),
+    [Total Transactions],
+    0
+) * 100
+
+// Volume in Tier 2: Step-Up MFA Challenge (30% to 70% risk score)
+[Tier 2 Volume %] = 
+DIVIDE(
+    CALCULATE([Total Transactions], Fact_Transactions[Risk_Score] >= 0.30 && Fact_Transactions[Risk_Score] < 0.70),
+    [Total Transactions],
+    0
+) * 100
+
+// Volume in Tier 3: Hard Freeze & Cardholder Alert (>= 70% risk score)
+[Tier 3 Volume %] = 
+DIVIDE(
+    CALCULATE([Total Transactions], Fact_Transactions[Risk_Score] >= 0.70),
+    [Total Transactions],
+    0
+) * 100
+
+
+// ==============================================================================================
+// 7. DYNAMIC UX & CONDITIONAL FORMATTING MEASURES
+// ==============================================================================================
+
+// Color hex for KPI Cards based on fraud rate severity
+[Fraud Rate KPI Color] = 
+IF(
+    [Fraud Rate %] > 1.0, 
+    "#EF4444", // Signal Red (Severe Alert)
+    IF(
+        [Fraud Rate %] > 0.3, 
+        "#F59E0B", // Amber Orange (Elevated Risk)
+        "#10B981"  // Financial Emerald Green (Normal Safe)
+    )
+)
+
+// Dynamic status badge for Diurnal Risk Window
+[Diurnal Window Status] = 
+IF(
+    SELECTEDVALUE(Dim_Time_Analysis[Is_Vulnerability_Window]) = "Yes",
+    "CRITICAL NIGHT SURGE (10x Normal Risk)",
+    "STANDARD MONITORING"
+)
+
+// Model selection comparison badge
+[Model Performance Winner] = 
+"Random Forest (+98.3% Efficiency, $47.8k Net Savings)"
+

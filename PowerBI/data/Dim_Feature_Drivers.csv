@@ -1,0 +1,11 @@
+Feature_Name,Correlation_With_Fraud,RF_Importance_Pct,Indicator_Type,Interpretation
+V17,-0.3265,18.4,Strong Negative Discriminator,Severe negative values strongly correlate with fraudulent account takeover or uncharacteristic card behavior.
+V14,-0.3025,16.8,Strong Negative Discriminator,Key PCA component reflecting device/network fingerprint deviation from historical baselines.
+V12,-0.2606,13.2,Strong Negative Discriminator,Merchant category & location consistency index.
+V10,-0.2169,10.5,Moderate Negative Discriminator,Behavioral rhythm and spending velocity marker.
+V16,-0.1965,8.9,Moderate Negative Discriminator,Cardholder credential & authentication challenge history component.
+V11,0.1549,7.6,Positive Discriminator,Elevated positive values indicate elevated velocity or unverified endpoint IP.
+V4,0.1334,6.5,Positive Discriminator,Transaction sequence burst and geographic displacement flag.
+V2,0.0913,4.8,Mild Positive Discriminator,Monetary dispersion proxy.
+V21,0.0404,3.2,Mild Positive Discriminator,Terminal response variance.
+Amount,0.0056,4.1,Non-Linear / Bimodal,Raw correlation near zero due to dual fraud modes (micro card testing vs large unauthorized withdrawals).

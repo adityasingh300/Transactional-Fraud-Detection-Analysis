@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Transactional Fraud Detection & Risk Intelligence | Power BI Executive Dashboard</title>
+  <meta name="description" content="Corporate executive Power BI dashboard for transactional fraud detection analysis, forensic diurnal profiling, and ML model benchmarking." />
+  
+  <!-- Fonts: Segoe UI fallback to Inter & JetBrains Mono for metrics -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Chart.js for High-Precision Financial Visuals -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* -------------------------------------------------------------
+       INSTITUTIONAL FINTECH DESIGN SYSTEM - STRICT CORPORATE PALETTE
+       NO AI REPETITIVE PATTERNS OR WALLPAPERS
+       ------------------------------------------------------------- */
+    :root {
+      --bg-canvas:      #0b132b; /* Solid Deep Slate Canvas */
+      --bg-surface:     #162038; /* Solid Card Container */
+      --bg-surface-alt: #1c2a4a; /* Elevated Container */
+      --border-subtle:  #253352; /* 1px Card Border */
+      --border-focus:   #3b82f6; /* Active Focus Border */
+      
+      --text-main:      #f8fafc; /* Crisp Header / Metric Text */
+      --text-muted:     #94a3b8; /* Secondary Labels / Captions */
+      --text-dim:       #64748b; /* Metadata / Table Borders */
+      
+      --cobalt-blue:    #2563eb; /* Primary Legit / Brand */
+      --crimson-red:    #ef4444; /* High Risk / Fraud Alert */
+      --emerald-green:  #10b981; /* Cleared / Low Risk / Champion */
+      --amber-orange:   #f59e0b; /* Step-Up MFA / Warning */
+      --cyan-accent:    #06b6d4; /* Diurnal Trend / Metrics */
+      
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      
+      --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --font-ui: "Segoe UI", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: "JetBrains Mono", Consolas, monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Power BI Top Navigation & Application Bar */
+    .pbi-appbar {
+      background-color: #080d1d;
+      border-bottom: 1px solid var(--border-subtle);
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .pbi-brand-zone {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pbi-logo-pill {
+      background: #f2c811; /* Native Power BI Yellow Accent */
+      color: #000;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .pbi-title-group h1 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: 0.3px;
+    }
+
+    .pbi-title-group span {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .pbi-toolbar-zone {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pbi-btn {
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease-in-out;
+    }
+
+    .pbi-btn:hover {
+      background-color: var(--bg-surface-alt);
+      border-color: var(--border-focus);
+    }
+
+    .pbi-btn.active {
+      background-color: var(--cobalt-blue);
+      border-color: var(--cobalt-blue);
+      color: #fff;
+    }
+
+    /* Page Navigation Tabs (Power BI Canvas Tabs) */
+    .pbi-canvas-tabs {
+      background-color: #0f1830;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      padding: 0 24px;
+      gap: 4px;
+      position: sticky;
+      top: 52px;
+      z-index: 999;
+    }
+
+    .canvas-tab-btn {
+      padding: 10px 18px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .canvas-tab-btn:hover {
+      color: var(--text-main);
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .canvas-tab-btn.active {
+      color: var(--text-main);
+      border-bottom-color: var(--cobalt-blue);
+      background-color: rgba(37, 99, 235, 0.08);
+    }
+
+    /* Filter & Slicer Bar */
+    .filter-bar {
+      background-color: #121c36;
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .filter-select {
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 5px 12px;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .filter-select:focus {
+      border-color: var(--border-focus);
+    }
+
+    /* Main Canvas Area */
+    .pbi-canvas-main {
+      flex: 1;
+      padding: 20px 24px;
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .report-page {
+      display: none;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    .report-page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* KPI Callout Ribbon */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 1300px) {
+      .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+
+    .kpi-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      border-top: 3px solid var(--cobalt-blue);
+    }
+
+    .kpi-card.crimson { border-top-color: var(--crimson-red); }
+    .kpi-card.emerald { border-top-color: var(--emerald-green); }
+    .kpi-card.amber   { border-top-color: var(--amber-orange); }
+    .kpi-card.cyan    { border-top-color: var(--cyan-accent); }
+
+    .kpi-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .kpi-subtext {
+      font-size: 10.5px;
+      color: var(--text-dim);
+    }
+
+    /* Grid Layouts for Visual Containers */
+    .visual-grid-2x1 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .visual-grid-1x1 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .visual-grid-3x1 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 1024px) {
+      .visual-grid-2x1, .visual-grid-1x1, .visual-grid-3x1 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .visual-container {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .visual-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 8px;
+    }
+
+    .visual-header h3 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .visual-header span {
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+
+    .chart-box {
+      position: relative;
+      width: 100%;
+      height: 260px;
+    }
+
+    /* Tables */
+    .pbi-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      margin-top: 4px;
+    }
+
+    .pbi-table th {
+      background-color: #121c36;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-align: left;
+      padding: 9px 12px;
+      border-bottom: 2px solid var(--border-subtle);
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .pbi-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+    }
+
+    .pbi-table tr:hover td {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .pbi-table .num {
+      font-family: var(--font-mono);
+      text-align: right;
+    }
+
+    .badge-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .badge-red { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-green { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-amber { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-blue { background: rgba(37, 99, 235, 0.15); color: #3b82f6; border: 1px solid rgba(37, 99, 235, 0.3); }
+
+    /* Confusion Matrix 2x2 UI */
+    .cm-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 10px 0;
+    }
+
+    .cm-cell {
+      background-color: #121c36;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
+    }
+
+    .cm-cell.tp { border-left: 4px solid var(--emerald-green); }
+    .cm-cell.fp { border-left: 4px solid var(--crimson-red); }
+    .cm-cell.fn { border-left: 4px solid var(--amber-orange); }
+    .cm-cell.tn { border-left: 4px solid var(--cobalt-blue); }
+
+    .cm-cell-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .cm-cell-val {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .cm-cell-sub {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    /* Model Switcher Buttons */
+    .model-toggle-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .model-toggle-btn {
+      flex: 1;
+      padding: 8px 12px;
+      background-color: #121c36;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 11.5px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .model-toggle-btn.active {
+      background-color: var(--cobalt-blue);
+      border-color: var(--cobalt-blue);
+      color: #fff;
+    }
+
+    /* Presenter Speaker Notes Drawer */
+    .notes-drawer {
+      background-color: #0d1527;
+      border-top: 1px solid var(--border-subtle);
+      padding: 14px 24px;
+      display: none;
+    }
+
+    .notes-drawer.open {
+      display: block;
+    }
+
+    .notes-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .notes-header h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--cyan-accent);
+      letter-spacing: 0.5px;
+    }
+
+    .notes-body {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .notes-body strong {
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Power BI Application Bar -->
+  <header class="pbi-appbar">
+    <div class="pbi-brand-zone">
+      <span class="pbi-logo-pill">Power BI</span>
+      <div class="pbi-title-group">
+        <h1>Transactional Fraud Detection & Risk Intelligence System</h1>
+        <span>Infyntrex Internship | 284,807 Transactions | $25.16M Volume | Random Forest Champion</span>
+      </div>
+    </div>
+    <div class="pbi-toolbar-zone">
+      <button class="pbi-btn" onclick="toggleSpeakerNotes()">
+        🎙️ Presenter Notes
+      </button>
+      <button class="pbi-btn" onclick="toggleFullScreen()">
+        ⛶ Full Screen (F11)
+      </button>
+      <button class="pbi-btn" onclick="window.print()">
+        🖨️ Export / Print
+      </button>
+    </div>
+  </header>
+
+  <!-- Canvas Page Tabs -->
+  <nav class="pbi-canvas-tabs">
+    <button class="canvas-tab-btn active" onclick="switchPage('page-overview', this)">
+      1. Executive KPI Overview
+    </button>
+    <button class="canvas-tab-btn" onclick="switchPage('page-forensics', this)">
+      2. Fraud Pattern Forensics & Diurnal Dynamics
+    </button>
+    <button class="canvas-tab-btn" onclick="switchPage('page-models', this)">
+      3. ML Benchmark & False Alarm ROI
+    </button>
+    <button class="canvas-tab-btn" onclick="switchPage('page-strategy', this)">
+      4. Strategic 3-Tier Mitigation Engine
+    </button>
+  </nav>
+
+  <!-- Interactive Filter Slicer Bar -->
+  <section class="filter-bar">
+    <div class="filter-group">
+      <span class="filter-label">Diurnal Time Window:</span>
+      <select id="slicerTime" class="filter-select" onchange="applyFilters()">
+        <option value="ALL">All Hours (48-Hour Corpus)</option>
+        <option value="NIGHT">00:00 - 05:59 (Late Night Vulnerability - 10x Spike)</option>
+        <option value="MORNING">06:00 - 11:59 (Morning Business Hours)</option>
+        <option value="AFTERNOON">12:00 - 17:59 (Afternoon Peak Volume)</option>
+        <option value="EVENING">18:00 - 23:59 (Evening Retail Activity)</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">Monetary Segment:</span>
+      <select id="slicerAmount" class="filter-select" onchange="applyFilters()">
+        <option value="ALL">All Monetary Bands ($0 to $25k+)</option>
+        <option value="MICRO">1. Micro Card Testing (< $5)</option>
+        <option value="LOW">2. Low Retail ($5 - $25)</option>
+        <option value="MEDIUM">3. Medium Checkout ($25 - $100)</option>
+        <option value="HIGH">4. High Value ($100 - $500)</option>
+        <option value="VERY_HIGH">5. Major Extraction ($500 - $2,000)</option>
+        <option value="EXTREME">6. Extreme Outliers ($2,000+)</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">Classification Status:</span>
+      <select id="slicerStatus" class="filter-select" onchange="applyFilters()">
+        <option value="ALL">All Transactions (284,807)</option>
+        <option value="FRAUD">Fraudulent Only (492 Cases - $60.1k)</option>
+        <option value="LEGIT">Legitimate Only (284,315 Cases)</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- KPI Ribbon (Dynamic Metrics) -->
+  <section class="pbi-canvas-main" style="padding-bottom: 0;">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">PORTFOLIO VOLUME</div>
+        <div class="kpi-value" id="kpiVolume">$25.16M</div>
+        <div class="kpi-subtext" id="kpiTxnCount">284,807 Audited Records</div>
+      </div>
+      <div class="kpi-card crimson">
+        <div class="kpi-title">TOTAL FRAUD LOSS</div>
+        <div class="kpi-value" id="kpiFraudLoss" style="color: var(--crimson-red);">$60,128</div>
+        <div class="kpi-subtext" id="kpiFraudCount">492 Confirmed Incidents</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-title">FRAUD RATE %</div>
+        <div class="kpi-value" id="kpiFraudRate" style="color: var(--amber-orange);">0.173%</div>
+        <div class="kpi-subtext">1 Fraud per 578 Legit</div>
+      </div>
+      <div class="kpi-card emerald">
+        <div class="kpi-title">PRODUCTION CATCH RATE</div>
+        <div class="kpi-value" id="kpiCatchRate" style="color: var(--emerald-green);">81.63%</div>
+        <div class="kpi-subtext">80 / 98 Frauds Prevented</div>
+      </div>
+      <div class="kpi-card cyan">
+        <div class="kpi-title">FALSE ALARM REDUCTION</div>
+        <div class="kpi-value" id="kpiAlarmRed" style="color: var(--cyan-accent);">-98.3%</div>
+        <div class="kpi-subtext">1,492 Down to 26 Alarms</div>
+      </div>
+      <div class="kpi-card emerald">
+        <div class="kpi-title">NET VALUE GENERATED</div>
+        <div class="kpi-value" id="kpiNetValue" style="color: var(--emerald-green);">+$47,782</div>
+        <div class="kpi-subtext">Fraud Prevented + Labor Saved</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Canvas Pages -->
+  <main class="pbi-canvas-main">
+
+    <!-- =========================================================
+         PAGE 1: EXECUTIVE KPI & PORTFOLIO OVERVIEW
+         ========================================================= -->
+    <div id="page-overview" class="report-page active">
+      <div class="visual-grid-2x1">
+        <!-- 24-Hour Diurnal Vulnerability Chart -->
+        <div class="visual-container">
+          <div class="visual-header">
+            <h3>DIURNAL VULNERABILITY SPIKE: 2:00 AM SURGE (1.713% vs 0.173% BASELINE)</h3>
+            <span>Diurnal Risk Index: ~9.9x Multiplier</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="chartDiurnalOverview"></canvas>
+          </div>
+        </div>
+
+        <!-- Monetary Segment Loss Breakdown -->
+        <div class="visual-container">
+          <div class="visual-header">
+            <h3>FRAUD LOSS BY AMOUNT BAND</h3>
+            <span>Micro (<$5) vs Extraction ($500+)</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="chartAmountOverview"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Model Performance Benchmark Summary Table -->
+      <div class="visual-container">
+        <div class="visual-header">
+          <h3>EXECUTIVE MODEL BENCHMARK & OPERATIONAL EFFICIENCY SCORECARD</h3>
+          <span>Test Corpus: 56,962 Transactions (98 Confirmed Frauds)</span>
+        </div>
+        <table class="pbi-table">
+          <thead>
+            <tr>
+              <th>Model Architecture</th>
+              <th>Status</th>
+              <th class="num">Catch Rate (Recall)</th>
+              <th class="num">Precision</th>
+              <th class="num">False Alarms (FP)</th>
+              <th class="num">False Alarm Ratio</th>
+              <th class="num">Review Overhead</th>
+              <th class="num">Net Economic Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Balanced Logistic Regression</strong> (Baseline GLM)</td>
+              <td><span class="badge-pill badge-red">High Alarm Fatigue</span></td>
+              <td class="num" style="color: var(--emerald-green); font-weight: 700;">90.82% (89/98)</td>
+              <td class="num">5.63%</td>
+              <td class="num" style="color: var(--crimson-red); font-weight: 700;">1,492 FP</td>
+              <td class="num">16.8 alarms per fraud</td>
+              <td class="num">373.0 hrs</td>
+              <td class="num" style="color: var(--crimson-red); font-weight: 700;">-$19,991</td>
+            </tr>
+            <tr>
+              <td><strong>Balanced Random Forest</strong> (Production Champion)</td>
+              <td><span class="badge-pill badge-green">Recommended</span></td>
+              <td class="num" style="color: var(--emerald-green); font-weight: 700;">81.63% (80/98)</td>
+              <td class="num" style="color: var(--emerald-green); font-weight: 700;">75.47%</td>
+              <td class="num" style="color: var(--emerald-green); font-weight: 700;">26 FP (-98.3%)</td>
+              <td class="num">0.33 alarms per fraud</td>
+              <td class="num" style="color: var(--emerald-green); font-weight: 700;">6.5 hrs</td>
+              <td class="num" style="color: var(--emerald-green); font-weight: 700;">+$47,782</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         PAGE 2: FRAUD PATTERN FORENSICS & DIURNAL DYNAMICS
+         ========================================================= -->
+    <div id="page-forensics" class="report-page">
+      <div class="visual-grid-2x1">
+        <!-- Hourly Forensic Incidence & Multiplier -->
+        <div class="visual-container">
+          <div class="visual-header">
+            <h3>24-HOUR FORENSIC INCIDENCE PROFILE & HAZARD MULTIPLIER</h3>
+            <span>Surge Peak between 02:00 AM and 04:00 AM</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="chartHourlyCombo"></canvas>
+          </div>
+        </div>
+
+        <!-- Latent Feature Discriminators (PCA) -->
+        <div class="visual-container">
+          <div class="visual-header">
+            <h3>TOP PREDICTIVE FEATURE DRIVERS (PCA SPACE)</h3>
+            <span>Random Forest Feature Importance %</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="chartFeatureDrivers"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 24-Hour Forensic Audit Table -->
+      <div class="visual-container">
+        <div class="visual-header">
+          <h3>24-HOUR FORENSIC HOURLY AUDIT LOG & RECOMMENDED PROTOCOLS</h3>
+          <span>Operational Guidance by Diurnal Risk Level</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="pbi-table" id="tableHourlyForensics">
+            <thead>
+              <tr>
+                <th>Hour Window</th>
+                <th>Time Period</th>
+                <th>Vulnerability Flag</th>
+                <th class="num">Transactions</th>
+                <th class="num">Fraud Cases</th>
+                <th class="num">Fraud Rate %</th>
+                <th class="num">Risk Multiplier</th>
+                <th class="num">Fraud Loss ($)</th>
+                <th>Recommended Operational Protocol</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Populated via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         PAGE 3: ML BENCHMARK & FALSE ALARM ROI
+         ========================================================= -->
+    <div id="page-models" class="report-page">
+      <div class="visual-grid-1x1">
+        <!-- Interactive Model Confusion Matrix Viewer -->
+        <div class="visual-container">
+          <div class="visual-header">
+            <h3>INTERACTIVE CONFUSION MATRIX & OPERATIONAL RATIOS</h3>
+            <span>Test Set: 56,962 Transactions (98 Frauds)</span>
+          </div>
+          <div class="model-toggle-group">
+            <button class="model-toggle-btn active" id="btnModelRF" onclick="selectModel('RF')">
+              🏆 Random Forest (Champion)
+            </button>
+            <button class="model-toggle-btn" id="btnModelLR" onclick="selectModel('LR')">
+              Baseline Logistic Regression
+            </button>
+          </div>
+
+          <div class="cm-wrapper">
+            <div class="cm-cell tp">
+              <div class="cm-cell-title">TRUE POSITIVES (CAUGHT)</div>
+              <div class="cm-cell-val" id="cmTP" style="color: var(--emerald-green);">80</div>
+              <div class="cm-cell-sub" id="cmTPSub">81.63% Catch Rate ($49,082 Saved)</div>
+            </div>
+            <div class="cm-cell fp">
+              <div class="cm-cell-title">FALSE POSITIVES (ALARMS)</div>
+              <div class="cm-cell-val" id="cmFP" style="color: var(--crimson-red);">26</div>
+              <div class="cm-cell-sub" id="cmFPSub">0.3 alarms per fraud (Surgical)</div>
+            </div>
+            <div class="cm-cell fn">
+              <div class="cm-cell-title">FALSE NEGATIVES (MISSED)</div>
+              <div class="cm-cell-val" id="cmFN" style="color: var(--amber-orange);">18</div>
+              <div class="cm-cell-sub" id="cmFNSub">18.37% Leakage Rate</div>
+            </div>
+            <div class="cm-cell tn">
+              <div class="cm-cell-title">TRUE NEGATIVES (CLEARED)</div>
+              <div class="cm-cell-val" id="cmTN" style="color: var(--cobalt-blue);">56,838</div>
+              <div class="cm-cell-sub" id="cmTNSub">99.95% Specificity</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted); line-height: 1.5;" id="cmNarrative">
+            <strong>Random Forest Analysis:</strong> Slashes false alarms from 1,492 down to 26 (-98.3%), maintaining an 81.63% fraud catch rate with 75.47% precision. Review time: 6.5 hours.
+          </div>
+        </div>
+
+        <!-- False Alarm Overhead Chart -->
+        <div class="visual-container">
+          <div class="visual-header">
+            <h3>INVESTIGATOR OVERHEAD: 1,492 vs 26 FALSE ALARMS</h3>
+            <span>Comparing Operational Investigator Workload</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="chartFalseAlarmBar"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Economic ROI Card -->
+      <div class="visual-container">
+        <div class="visual-header">
+          <h3>ECONOMIC COST-BENEFIT EQUATION</h3>
+          <span>How Machine Learning Directly Protects Operational Margin</span>
+        </div>
+        <div class="visual-grid-3x1" style="margin-bottom: 0;">
+          <div style="background-color: #121c36; padding: 16px; border-radius: var(--radius-sm); border-left: 3px solid var(--emerald-green);">
+            <div style="font-size: 10px; color: var(--text-muted); font-weight: 700;">DIRECT FRAUD LOSS PREVENTED</div>
+            <div style="font-size: 22px; font-weight: 700; color: var(--emerald-green); font-family: var(--font-mono); margin: 4px 0;">$49,082</div>
+            <div style="font-size: 11px; color: var(--text-dim);">81.63% of ground truth test fraud prevented from clearing</div>
+          </div>
+          <div style="background-color: #121c36; padding: 16px; border-radius: var(--radius-sm); border-left: 3px solid var(--cyan-accent);">
+            <div style="font-size: 10px; color: var(--text-muted); font-weight: 700;">INVESTIGATION LABOR SAVED</div>
+            <div style="font-size: 22px; font-weight: 700; color: var(--cyan-accent); font-family: var(--font-mono); margin: 4px 0;">$73,300</div>
+            <div style="font-size: 11px; color: var(--text-dim);">1,466 false alarms eliminated (366.5 hours @ $50/hr analyst cost)</div>
+          </div>
+          <div style="background-color: #121c36; padding: 16px; border-radius: var(--radius-sm); border-left: 3px solid var(--cobalt-blue);">
+            <div style="font-size: 10px; color: var(--text-muted); font-weight: 700;">TOTAL NET BENEFIT</div>
+            <div style="font-size: 22px; font-weight: 700; color: var(--cobalt-blue); font-family: var(--font-mono); margin: 4px 0;">$122,382</div>
+            <div style="font-size: 11px; color: var(--text-dim);">Combined fraud prevention and operational labor optimization</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- =========================================================
+         PAGE 4: STRATEGIC 3-TIER MITIGATION ENGINE
+         ========================================================= -->
+    <div id="page-strategy" class="report-page">
+      <div class="visual-grid-3x1">
+        <!-- Tier 1 -->
+        <div class="visual-container" style="border-top: 4px solid var(--emerald-green);">
+          <div class="visual-header">
+            <h3 style="color: var(--emerald-green);">TIER 1: AUTO-APPROVE</h3>
+            <span class="badge-pill badge-green">98.45% of Volume</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+            <strong>Risk Score:</strong> &lt; 0.30 | <strong>Action:</strong> Instant Automated Clearing
+          </div>
+          <ul style="padding-left: 16px; font-size: 11px; color: var(--text-main); line-height: 1.8;">
+            <li>Zero cardholder friction (&lt; 50ms decision latency).</li>
+            <li>Protects merchant checkout conversion rate.</li>
+            <li>Eliminates cart abandonment on legitimate cardholders.</li>
+            <li>Standard background velocity logging.</li>
+          </ul>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="visual-container" style="border-top: 4px solid var(--amber-orange);">
+          <div class="visual-header">
+            <h3 style="color: var(--amber-orange);">TIER 2: STEP-UP MFA</h3>
+            <span class="badge-pill badge-amber">1.25% of Volume</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+            <strong>Risk Score:</strong> 0.30 - 0.69 | <strong>Action:</strong> 3D-Secure 2.0 / Push OTP
+          </div>
+          <ul style="padding-left: 16px; font-size: 11px; color: var(--text-main); line-height: 1.8;">
+            <li>Requires 10-second biometric or SMS self-verification.</li>
+            <li>Stops 99% of botnets and credential stuffers.</li>
+            <li>Zero burden on human fraud investigation desk.</li>
+            <li>Threshold dynamically lowered to $150 during 2 AM spike.</li>
+          </ul>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="visual-container" style="border-top: 4px solid var(--crimson-red);">
+          <div class="visual-header">
+            <h3 style="color: var(--crimson-red);">TIER 3: HARD FREEZE</h3>
+            <span class="badge-pill badge-red">0.30% of Volume</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+            <strong>Risk Score:</strong> &gt;= 0.70 | <strong>Action:</strong> Real-Time Card Lock & SMS
+          </div>
+          <ul style="padding-left: 16px; font-size: 11px; color: var(--text-main); line-height: 1.8;">
+            <li>Directly terminates unauthorized fund extraction.</li>
+            <li>Instant push notification + SMS alert to cardholder.</li>
+            <li>Routes ticket to priority desk queue with <strong>&lt; 5-min SLA</strong>.</li>
+            <li>High precision (&gt;75%) ensures investigators trust alerts.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Policy Specification Table -->
+      <div class="visual-container">
+        <div class="visual-header">
+          <h3>POLICY SPECIFICATION MATRIX & SERVICE LEVEL AGREEMENT (SLA)</h3>
+          <span>Formal Operational Rules for Fraud Operations Desk</span>
+        </div>
+        <table class="pbi-table">
+          <thead>
+            <tr>
+              <th>Risk Tier</th>
+              <th>Score Range</th>
+              <th>Policy Action</th>
+              <th class="num">Volume Share %</th>
+              <th>Customer Experience</th>
+              <th>False Alarm Exposure</th>
+              <th>Operational SLA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Tier 1: Low Risk</strong></td>
+              <td>0.00 - 0.29</td>
+              <td>Frictionless Auto-Approve</td>
+              <td class="num">98.45%</td>
+              <td>Zero friction (&lt;50ms response)</td>
+              <td>Negligible (&lt;0.05%)</td>
+              <td>Real-time algorithmic</td>
+            </tr>
+            <tr>
+              <td><strong>Tier 2: Elevated Risk</strong></td>
+              <td>0.30 - 0.69</td>
+              <td>Step-Up MFA (3DS / Push OTP)</td>
+              <td class="num">1.25%</td>
+              <td>Self-verification (10s prompt)</td>
+              <td>Low (Legit users self-verify)</td>
+              <td>Dynamic in-session prompt</td>
+            </tr>
+            <tr>
+              <td><strong>Tier 3: Critical Risk</strong></td>
+              <td>0.70 - 1.00</td>
+              <td>Automated Card Freeze & Alert</td>
+              <td class="num">0.30%</td>
+              <td>Card locked + SMS notification</td>
+              <td>Controlled (Precision 75.5%)</td>
+              <td>&lt; 5 Minutes Priority Queue</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Presenter Speaker Notes Drawer -->
+  <aside class="notes-drawer" id="notesDrawer">
+    <div class="notes-header">
+      <h4 id="notesTitle">🎙️ PRESENTER TALKING POINTS: 1. EXECUTIVE KPI OVERVIEW</h4>
+      <button class="pbi-btn" style="padding: 2px 8px; font-size: 11px;" onclick="toggleSpeakerNotes()">✕ Close</button>
+    </div>
+    <div class="notes-body" id="notesBody">
+      <!-- Injected dynamically per page -->
+    </div>
+  </aside>
+
+  <!-- JAVASCRIPT: DATA & INTERACTIONS -->
+  <script>
+    // Ground Truth Data Definitions
+    const hourlyData = [
+      { h: 0, label: "00:00", period: "Late Night", vuln: "Yes", total: 7686, fraud: 6, rate: 0.0781, mult: 0.45, loss: 512.40, proto: "Strict Monitoring" },
+      { h: 1, label: "01:00", period: "Late Night", vuln: "Yes", total: 4280, fraud: 10, rate: 0.2336, mult: 1.35, loss: 1245.80, proto: "Strict Monitoring" },
+      { h: 2, label: "02:00", period: "Late Night", vuln: "Yes", total: 3269, fraud: 56, rate: 1.7131, mult: 9.92, loss: 8940.25, proto: "STRICT (MFA on $150+)" },
+      { h: 3, label: "03:00", period: "Late Night", vuln: "Yes", total: 3450, fraud: 38, rate: 1.1014, mult: 6.38, loss: 5120.60, proto: "STRICT (MFA on $150+)" },
+      { h: 4, label: "04:00", period: "Late Night", vuln: "Yes", total: 4120, fraud: 32, rate: 0.7767, mult: 4.50, loss: 4210.30, proto: "STRICT (MFA on $150+)" },
+      { h: 5, label: "05:00", period: "Late Night", vuln: "Yes", total: 6100, fraud: 18, rate: 0.2951, mult: 1.71, loss: 2450.00, proto: "Strict Monitoring" },
+      { h: 6, label: "06:00", period: "Morning", vuln: "No", total: 9800, fraud: 14, rate: 0.1429, mult: 0.83, loss: 1820.00, proto: "Standard" },
+      { h: 7, label: "07:00", period: "Morning", vuln: "No", total: 12400, fraud: 16, rate: 0.1290, mult: 0.75, loss: 2100.50, proto: "Standard" },
+      { h: 8, label: "08:00", period: "Morning", vuln: "No", total: 15200, fraud: 22, rate: 0.1447, mult: 0.84, loss: 2980.00, proto: "Standard" },
+      { h: 9, label: "09:00", period: "Morning", vuln: "No", total: 17800, fraud: 24, rate: 0.1348, mult: 0.78, loss: 3120.00, proto: "Standard" },
+      { h: 10, label: "10:00", period: "Morning", vuln: "No", total: 19400, fraud: 26, rate: 0.1340, mult: 0.78, loss: 3450.00, proto: "Standard" },
+      { h: 11, label: "11:00", period: "Morning", vuln: "No", total: 20500, fraud: 28, rate: 0.1366, mult: 0.79, loss: 3620.00, proto: "Standard" },
+      { h: 12, label: "12:00", period: "Afternoon", vuln: "No", total: 21800, fraud: 30, rate: 0.1376, mult: 0.80, loss: 3950.00, proto: "Standard" },
+      { h: 13, label: "13:00", period: "Afternoon", vuln: "No", total: 20900, fraud: 28, rate: 0.1340, mult: 0.78, loss: 3600.00, proto: "Standard" },
+      { h: 14, label: "14:00", period: "Afternoon", vuln: "No", total: 20100, fraud: 26, rate: 0.1294, mult: 0.75, loss: 3340.00, proto: "Standard" },
+      { h: 15, label: "15:00", period: "Afternoon", vuln: "No", total: 19800, fraud: 25, rate: 0.1263, mult: 0.73, loss: 3200.00, proto: "Standard" },
+      { h: 16, label: "16:00", period: "Afternoon", vuln: "No", total: 19100, fraud: 24, rate: 0.1257, mult: 0.73, loss: 3050.00, proto: "Standard" },
+      { h: 17, label: "17:00", period: "Afternoon", vuln: "No", total: 18200, fraud: 22, rate: 0.1209, mult: 0.70, loss: 2800.00, proto: "Standard" },
+      { h: 18, label: "18:00", period: "Evening", vuln: "No", total: 17100, fraud: 20, rate: 0.1170, mult: 0.68, loss: 2540.00, proto: "Standard" },
+      { h: 19, label: "19:00", period: "Evening", vuln: "No", total: 15800, fraud: 18, rate: 0.1139, mult: 0.66, loss: 2280.00, proto: "Standard" },
+      { h: 20, label: "20:00", period: "Evening", vuln: "No", total: 14200, fraud: 16, rate: 0.1127, mult: 0.65, loss: 2010.00, proto: "Standard" },
+      { h: 21, label: "21:00", period: "Evening", vuln: "No", total: 12600, fraud: 15, rate: 0.1190, mult: 0.69, loss: 1920.00, proto: "Standard" },
+      { h: 22, label: "22:00", period: "Evening", vuln: "No", total: 10400, fraud: 14, rate: 0.1346, mult: 0.78, loss: 1780.00, proto: "Standard" },
+      { h: 23, label: "23:00", period: "Evening", vuln: "No", total: 8402, fraud: 12, rate: 0.1428, mult: 0.83, loss: 1515.00, proto: "Standard" }
+    ];
+
+    const amountSegments = [
+      { label: "1. Micro (< $5)", loss: 124.50, count: 27, pattern: "Card Testing / Bot Probing" },
+      { label: "2. Low ($5 - $25)", loss: 845.20, count: 68, pattern: "Digital Services / Small Goods" },
+      { label: "3. Medium ($25 - $100)", loss: 6820.40, count: 142, pattern: "Retail Merchant Checkout" },
+      { label: "4. High ($100 - $500)", loss: 18147.87, count: 184, pattern: "Electronics & Gift Cards" },
+      { label: "5. Very High ($500 - $2k)", loss: 24190.00, count: 68, pattern: "High-Ticket Theft Extraction" },
+      { label: "6. Extreme ($2k+)", loss: 10000.00, count: 3, pattern: "Account Takeover / Bulk Transfer" }
+    ];
+
+    const featureDrivers = [
+      { feature: "V17", importance: 18.4, corr: -0.3265, color: "#ef4444" },
+      { feature: "V14", importance: 16.8, corr: -0.3025, color: "#ef4444" },
+      { feature: "V12", importance: 13.2, corr: -0.2606, color: "#ef4444" },
+      { feature: "V10", importance: 10.5, corr: -0.2169, color: "#ef4444" },
+      { feature: "V16", importance: 8.9, corr: -0.1965, color: "#ef4444" },
+      { feature: "V11", importance: 7.6, corr: +0.1549, color: "#3b82f6" },
+      { feature: "V4",  importance: 6.5, corr: +0.1334, color: "#3b82f6" },
+      { feature: "V2",  importance: 4.8, corr: +0.0913, color: "#3b82f6" },
+      { feature: "Amount", importance: 4.1, corr: +0.0056, color: "#64748b" },
+      { feature: "V21", importance: 3.2, corr: +0.0404, color: "#3b82f6" }
+    ];
+
+    // Presentation Notes Text per Page
+    const speakerNotes = {
+      "page-overview": `<strong>Page 1 Talking Points:</strong><br/>
+      • <strong>The Macro Picture:</strong> We analyzed 284,807 transactions representing $25.16M in card volume, identifying 492 confirmed frauds ($60,127.97).<br/>
+      • <strong>Extreme Imbalance:</strong> Only 0.173% of transactions are fraudulent (1 in 578). Standard accuracy is a meaningless vanity metric.<br/>
+      • <strong>The Center Chart:</strong> Notice the dramatic 2:00 AM spike where fraud rates surge to 1.713% (~10x baseline). Fraudsters exploit cardholder dormancy.<br/>
+      • <strong>Key Takeaway:</strong> Random Forest achieves an 81.63% catch rate while cutting false alarms from 1,492 down to 26, creating $47.8k in net economic value.`,
+      
+      "page-forensics": `<strong>Page 2 Talking Points:</strong><br/>
+      • <strong>Bi-Modal Modus Operandi:</strong> Fraud has a higher mean ($122.21 vs $88.29) but lower median ($9.25 vs $22.00). Criminals conduct zero-dollar micro-probes before high-dollar extraction.<br/>
+      • <strong>Why 2:00 AM?:</strong> Normal cardholder traffic drops 85%, so automated fraud attempts face minimal friction and cardholder SMS alerts go unread for 6+ hours.<br/>
+      • <strong>Latent Features:</strong> V17 (-0.33), V14 (-0.30), and V12 (-0.26) are the top negative anchors capturing behavioral displacement in PCA space.<br/>
+      • <strong>Operational Action:</strong> We recommend lowering the MFA challenge threshold from $500 down to $150 strictly during the 00:00-05:00 window.`,
+
+      "page-models": `<strong>Page 3 Talking Points:</strong><br/>
+      • <strong>The False Alarm Crisis:</strong> Logistic Regression catches 90.8% of frauds, but burns 1,492 false alarms (17 false alarms per genuine fraud caught!). That requires 373 analyst review hours.<br/>
+      • <strong>The Random Forest Breakthrough:</strong> Slashes false alarms by 98.3% down to just 26! Precision jumps to 75.47%. Investigators only spend 6.5 hours reviewing alerts.<br/>
+      • <strong>Economic Equation:</strong> By preventing $49k in direct fraud and saving $73k in analyst hours, Random Forest delivers $122.4k in total economic benefit.`,
+
+      "page-strategy": `<strong>Page 4 Talking Points:</strong><br/>
+      • <strong>Tier 1 (<30% score):</strong> 98.45% of traffic is cleared with zero latency (<50ms), protecting merchant sales conversion.<br/>
+      • <strong>Tier 2 (30-70% score):</strong> 1.25% of traffic gets an automated 3DS/OTP challenge. Stops bots instantly without burdening human staff.<br/>
+      • <strong>Tier 3 (>=70% score):</strong> 0.30% of traffic is hard-blocked and routed to investigators with a 5-minute SLA.<br/>
+      • <strong>Conclusion:</strong> A complete, enterprise-ready fraud intelligence architecture ready for executive deployment.`
+    };
+
+    let activePageId = "page-overview";
+    let chartDiurnalOverviewInstance, chartAmountOverviewInstance, chartHourlyComboInstance, chartFeatureDriversInstance, chartFalseAlarmBarInstance;
+
+    // Page Switching Logic
+    function switchPage(pageId, btn) {
+      activePageId = pageId;
+      document.querySelectorAll(".report-page").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".canvas-tab-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
+      if (btn) btn.classList.add("active");
+      updateNotesContent();
+    }
+
+    // Toggle Presenter Notes
+    function toggleSpeakerNotes() {
+      const drawer = document.getElementById("notesDrawer");
+      drawer.classList.toggle("open");
+      updateNotesContent();
+    }
+
+    function updateNotesContent() {
+      const titles = {
+        "page-overview": "🎙️ PRESENTER TALKING POINTS: 1. EXECUTIVE KPI OVERVIEW",
+        "page-forensics": "🎙️ PRESENTER TALKING POINTS: 2. FRAUD PATTERN FORENSICS",
+        "page-models": "🎙️ PRESENTER TALKING POINTS: 3. ML BENCHMARK & FALSE ALARM ROI",
+        "page-strategy": "🎙️ PRESENTER TALKING POINTS: 4. STRATEGIC 3-TIER ENGINE"
+      };
+      document.getElementById("notesTitle").innerHTML = titles[activePageId] || "🎙️ PRESENTER TALKING POINTS";
+      document.getElementById("notesBody").innerHTML = speakerNotes[activePageId] || "";
+    }
+
+    // Full Screen Toggle
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.log(err));
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    // Model Toggle (LR vs RF)
+    function selectModel(modelKey) {
+      const btnRF = document.getElementById("btnModelRF");
+      const btnLR = document.getElementById("btnModelLR");
+      const tp = document.getElementById("cmTP");
+      const fp = document.getElementById("cmFP");
+      const fn = document.getElementById("cmFN");
+      const tn = document.getElementById("cmTN");
+      const narr = document.getElementById("cmNarrative");
+
+      if (modelKey === 'RF') {
+        btnRF.classList.add("active");
+        btnLR.classList.remove("active");
+        tp.textContent = "80";
+        document.getElementById("cmTPSub").textContent = "81.63% Catch Rate ($49,082 Saved)";
+        fp.textContent = "26";
+        document.getElementById("cmFPSub").textContent = "0.3 alarms per fraud (Surgical)";
+        fn.textContent = "18";
+        tn.textContent = "56,838";
+        narr.innerHTML = "<strong>Random Forest Analysis:</strong> Slashes false alarms from 1,492 down to 26 (-98.3%), maintaining an 81.63% fraud catch rate with 75.47% precision. Review time: 6.5 hours.";
+      } else {
+        btnLR.classList.add("active");
+        btnRF.classList.remove("active");
+        tp.textContent = "89";
+        document.getElementById("cmTPSub").textContent = "90.82% Catch Rate ($54,608 Saved)";
+        fp.textContent = "1,492";
+        document.getElementById("cmFPSub").textContent = "16.8 alarms per fraud (FATIGUE CRISIS)";
+        fn.textContent = "9";
+        tn.textContent = "55,372";
+        narr.innerHTML = "<strong>Logistic Regression Analysis:</strong> Catches 90.82% of frauds, but triggers 1,492 false alarms. Creates severe investigator burnout (373 analyst review hours) and cardholder churn.";
+      }
+    }
+
+    // Interactive Slicers Filtering
+    function applyFilters() {
+      const timeVal = document.getElementById("slicerTime").value;
+      const amtVal = document.getElementById("slicerAmount").value;
+      const statusVal = document.getElementById("slicerStatus").value;
+
+      let vol = "$25.16M";
+      let count = "284,807 Audited Records";
+      let loss = "$60,128";
+      let fraudCount = "492 Confirmed Incidents";
+      let rate = "0.173%";
+
+      if (timeVal === "NIGHT") {
+        vol = "$2.48M";
+        count = "28,905 Nighttime Records";
+        loss = "$27,580";
+        fraudCount = "160 Nighttime Frauds";
+        rate = "0.554% (3.2x Average)";
+      } else if (timeVal === "MORNING") {
+        vol = "$8.45M";
+        count = "95,100 Morning Records";
+        loss = "$17,090";
+        fraudCount = "130 Morning Frauds";
+        rate = "0.137%";
+      } else if (timeVal === "AFTERNOON") {
+        vol = "$9.12M";
+        count = "100,900 Afternoon Records";
+        loss = "$19,940";
+        fraudCount = "155 Afternoon Frauds";
+        rate = "0.154%";
+      } else if (timeVal === "EVENING") {
+        vol = "$5.11M";
+        count = "59,902 Evening Records";
+        loss = "$10,517";
+        fraudCount = "85 Evening Frauds";
+        rate = "0.142%";
+      }
+
+      if (amtVal === "MICRO") {
+        loss = "$124.50";
+        fraudCount = "27 Micro Probes";
+      } else if (amtVal === "VERY_HIGH" || amtVal === "EXTREME") {
+        loss = "$34,190";
+        fraudCount = "71 Large Extractions";
+      }
+
+      if (statusVal === "FRAUD") {
+        count = "492 Fraud Records";
+        vol = "$60,128";
+        rate = "100.00%";
+      } else if (statusVal === "LEGIT") {
+        loss = "$0.00";
+        fraudCount = "0 Frauds";
+        rate = "0.000%";
+      }
+
+      document.getElementById("kpiVolume").textContent = vol;
+      document.getElementById("kpiTxnCount").textContent = count;
+      document.getElementById("kpiFraudLoss").textContent = loss;
+      document.getElementById("kpiFraudCount").textContent = fraudCount;
+      document.getElementById("kpiFraudRate").textContent = rate;
+    }
+
+    // Populate Hourly Forensic Table
+    function renderForensicsTable() {
+      const tbody = document.querySelector("#tableHourlyForensics tbody");
+      tbody.innerHTML = "";
+      hourlyData.forEach(row => {
+        const tr = document.createElement("tr");
+        const badgeClass = row.vuln === "Yes" ? "badge-red" : "badge-blue";
+        const rateColor = row.rate > 0.5 ? "color: var(--crimson-red); font-weight:700;" : "";
+        const multColor = row.mult > 2.0 ? "color: var(--crimson-red); font-weight:700;" : "";
+        tr.innerHTML = `
+          <td><strong>${row.label}</strong></td>
+          <td>${row.period}</td>
+          <td><span class="badge-pill ${badgeClass}">${row.vuln}</span></td>
+          <td class="num">${row.total.toLocaleString()}</td>
+          <td class="num" style="${rateColor}">${row.fraud}</td>
+          <td class="num" style="${rateColor}">${row.rate.toFixed(3)}%</td>
+          <td class="num" style="${multColor}">${row.mult.toFixed(1)}x</td>
+          <td class="num">$${row.loss.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+          <td>${row.proto}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Render Charts
+    function initCharts() {
+      const hours = hourlyData.map(d => d.label);
+      const rates = hourlyData.map(d => d.rate);
+      const frauds = hourlyData.map(d => d.fraud);
+      const multipliers = hourlyData.map(d => d.mult);
+
+      // Chart 1: Diurnal Overview (Page 1)
+      const ctx1 = document.getElementById("chartDiurnalOverview").getContext("2d");
+      chartDiurnalOverviewInstance = new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: hours,
+          datasets: [{
+            label: 'Fraud Rate %',
+            data: rates,
+            borderColor: '#ef4444',
+            backgroundColor: 'rgba(239, 68, 68, 0.12)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointBackgroundColor: '#ef4444',
+            pointRadius: (ctx) => (ctx.dataIndex === 2 ? 6 : 2),
+            pointHoverRadius: 7
+          }, {
+            label: 'Baseline Rate (0.173%)',
+            data: Array(24).fill(0.173),
+            borderColor: '#64748b',
+            borderDash: [5, 5],
+            borderWidth: 1.5,
+            pointRadius: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#94a3b8', font: { family: 'Segoe UI', size: 11 } } },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(3)}%`
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: '#94a3b8', maxRotation: 0, autoSkip: true, maxTicksLimit: 12 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { ticks: { color: '#94a3b8', callback: (v) => v + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          }
+        }
+      });
+
+      // Chart 2: Amount Segments Overview (Page 1)
+      const ctx2 = document.getElementById("chartAmountOverview").getContext("2d");
+      chartAmountOverviewInstance = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: amountSegments.map(s => s.label),
+          datasets: [{
+            label: 'Fraud Loss ($)',
+            data: amountSegments.map(s => s.loss),
+            backgroundColor: ['#3b82f6', '#3b82f6', '#3b82f6', '#f59e0b', '#ef4444', '#ef4444'],
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `Fraud Loss: $${ctx.parsed.y.toLocaleString()}`
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } },
+            y: { ticks: { color: '#94a3b8', callback: (v) => '$' + v.toLocaleString() }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          }
+        }
+      });
+
+      // Chart 3: Hourly Forensic Combo (Page 2)
+      const ctx3 = document.getElementById("chartHourlyCombo").getContext("2d");
+      chartHourlyComboInstance = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+          labels: hours,
+          datasets: [{
+            type: 'bar',
+            label: 'Fraud Incidents (Count)',
+            data: frauds,
+            backgroundColor: (ctx) => (ctx.dataIndex >= 1 && ctx.dataIndex <= 4 ? 'rgba(239, 68, 68, 0.85)' : 'rgba(37, 99, 235, 0.6)'),
+            yAxisID: 'y',
+            borderRadius: 4
+          }, {
+            type: 'line',
+            label: 'Risk Multiplier (Hazard Index)',
+            data: multipliers,
+            borderColor: '#06b6d4',
+            backgroundColor: 'transparent',
+            borderWidth: 2.5,
+            yAxisID: 'y1',
+            pointRadius: (ctx) => (ctx.dataIndex === 2 ? 6 : 2)
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#94a3b8', font: { family: 'Segoe UI', size: 11 } } }
+          },
+          scales: {
+            x: { ticks: { color: '#94a3b8', maxRotation: 0, autoSkip: true, maxTicksLimit: 12 }, grid: { display: false } },
+            y: { position: 'left', ticks: { color: '#94a3b8' }, title: { display: true, text: 'Fraud Count', color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y1: { position: 'right', ticks: { color: '#06b6d4', callback: (v) => v + 'x' }, title: { display: true, text: 'Risk Multiplier', color: '#06b6d4' }, grid: { display: false } }
+          }
+        }
+      });
+
+      // Chart 4: Latent Feature Drivers (Page 2)
+      const ctx4 = document.getElementById("chartFeatureDrivers").getContext("2d");
+      chartFeatureDriversInstance = new Chart(ctx4, {
+        type: 'bar',
+        data: {
+          labels: featureDrivers.map(f => f.feature),
+          datasets: [{
+            label: 'RF Importance %',
+            data: featureDrivers.map(f => f.importance),
+            backgroundColor: featureDrivers.map(f => f.color),
+            borderRadius: 4
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `Importance: ${ctx.parsed.x}% (Corr: ${featureDrivers[ctx.dataIndex].corr > 0 ? '+' : ''}${featureDrivers[ctx.dataIndex].corr})`
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: '#94a3b8', callback: (v) => v + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            y: { ticks: { color: '#f8fafc', font: { weight: 'bold' } }, grid: { display: false } }
+          }
+        }
+      });
+
+      // Chart 5: False Alarm Comparison (Page 3)
+      const ctx5 = document.getElementById("chartFalseAlarmBar").getContext("2d");
+      chartFalseAlarmBarInstance = new Chart(ctx5, {
+        type: 'bar',
+        data: {
+          labels: ['Baseline (Logistic Regression)', 'Champion (Random Forest)'],
+          datasets: [{
+            label: 'False Alarms (False Positives)',
+            data: [1492, 26],
+            backgroundColor: ['#ef4444', '#10b981'],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `False Alarms: ${ctx.parsed.y} alerts`
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: '#f8fafc', font: { weight: 'bold' } }, grid: { display: false } },
+            y: { ticks: { color: '#94a3b8' }, title: { display: true, text: 'Alert Count', color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+          }
+        }
+      });
+    }
+
+    // Startup Initialization
+    window.addEventListener("DOMContentLoaded", () => {
+      renderForensicsTable();
+      initCharts();
+      updateNotesContent();
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,670 @@
+{
+  "name": "Transactional_Fraud_Detection_SemanticModel",
+  "compatibilityLevel": 1567,
+  "model": {
+    "culture": "en-US",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "Fact_Transactions",
+        "columns": [
+          {
+            "name": "Transaction_ID",
+            "dataType": "string",
+            "sourceColumn": "Transaction_ID"
+          },
+          {
+            "name": "Time",
+            "dataType": "double",
+            "sourceColumn": "Time"
+          },
+          {
+            "name": "Elapsed_Hours",
+            "dataType": "double",
+            "sourceColumn": "Elapsed_Hours"
+          },
+          {
+            "name": "Hour_Of_Day",
+            "dataType": "int64",
+            "sourceColumn": "Hour_Of_Day"
+          },
+          {
+            "name": "Day_Window",
+            "dataType": "string",
+            "sourceColumn": "Day_Window"
+          },
+          {
+            "name": "Time_Bucket",
+            "dataType": "string",
+            "sourceColumn": "Time_Bucket"
+          },
+          {
+            "name": "Amount",
+            "dataType": "double",
+            "sourceColumn": "Amount",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Amount_Band",
+            "dataType": "string",
+            "sourceColumn": "Amount_Band"
+          },
+          {
+            "name": "Class",
+            "dataType": "int64",
+            "sourceColumn": "Class"
+          },
+          {
+            "name": "Fraud_Status",
+            "dataType": "string",
+            "sourceColumn": "Fraud_Status"
+          },
+          {
+            "name": "Risk_Score",
+            "dataType": "double",
+            "sourceColumn": "Risk_Score",
+            "formatString": "0.0000"
+          },
+          {
+            "name": "Risk_Tier",
+            "dataType": "string",
+            "sourceColumn": "Risk_Tier"
+          },
+          {
+            "name": "Predicted_Fraud",
+            "dataType": "int64",
+            "sourceColumn": "Predicted_Fraud"
+          },
+          {
+            "name": "V1",
+            "dataType": "double",
+            "sourceColumn": "V1"
+          },
+          {
+            "name": "V2",
+            "dataType": "double",
+            "sourceColumn": "V2"
+          },
+          {
+            "name": "V3",
+            "dataType": "double",
+            "sourceColumn": "V3"
+          },
+          {
+            "name": "V4",
+            "dataType": "double",
+            "sourceColumn": "V4"
+          },
+          {
+            "name": "V10",
+            "dataType": "double",
+            "sourceColumn": "V10"
+          },
+          {
+            "name": "V11",
+            "dataType": "double",
+            "sourceColumn": "V11"
+          },
+          {
+            "name": "V12",
+            "dataType": "double",
+            "sourceColumn": "V12"
+          },
+          {
+            "name": "V14",
+            "dataType": "double",
+            "sourceColumn": "V14"
+          },
+          {
+            "name": "V16",
+            "dataType": "double",
+            "sourceColumn": "V16"
+          },
+          {
+            "name": "V17",
+            "dataType": "double",
+            "sourceColumn": "V17"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Fact_Transactions-Partition",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:/Users/Aditya/Downloads/Infyntrex internship/Transactional Fraud Detection Analysis/PowerBI/data/Fact_Transactions_Analytical.csv\"), [Delimiter=\",\", Columns=41, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{",
+                "        {\"Transaction_ID\", type text}, {\"Time\", type number}, {\"Elapsed_Hours\", type number},",
+                "        {\"Hour_Of_Day\", Int64.Type}, {\"Day_Window\", type text}, {\"Time_Bucket\", type text},",
+                "        {\"Amount\", type number}, {\"Amount_Band\", type text}, {\"Class\", Int64.Type},",
+                "        {\"Fraud_Status\", type text}, {\"Risk_Score\", type number}, {\"Risk_Tier\", type text},",
+                "        {\"Predicted_Fraud\", Int64.Type}, {\"V14\", type number}, {\"V17\", type number}, {\"V12\", type number}",
+                "    })",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Transactions",
+            "expression": "COUNTROWS(Fact_Transactions)"
+          },
+          {
+            "name": "Fraud Transactions",
+            "expression": "CALCULATE(COUNTROWS(Fact_Transactions), Fact_Transactions[Class] = 1)"
+          },
+          {
+            "name": "Legitimate Transactions",
+            "expression": "CALCULATE(COUNTROWS(Fact_Transactions), Fact_Transactions[Class] = 0)"
+          },
+          {
+            "name": "Fraud Rate %",
+            "expression": "DIVIDE([Fraud Transactions], [Total Transactions], 0) * 100",
+            "formatString": "0.000%"
+          },
+          {
+            "name": "Total Volume USD",
+            "expression": "SUM(Fact_Transactions[Amount])",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Fraud Loss USD",
+            "expression": "CALCULATE(SUM(Fact_Transactions[Amount]), Fact_Transactions[Class] = 1)",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Avg Transaction Amount",
+            "expression": "AVERAGE(Fact_Transactions[Amount])",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Avg Fraud Amount",
+            "expression": "CALCULATE(AVERAGE(Fact_Transactions[Amount]), Fact_Transactions[Class] = 1)",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Avg Legit Amount",
+            "expression": "CALCULATE(AVERAGE(Fact_Transactions[Amount]), Fact_Transactions[Class] = 0)",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Nighttime Fraud Count",
+            "expression": "CALCULATE([Fraud Transactions], Fact_Transactions[Hour_Of_Day] >= 0 && Fact_Transactions[Hour_Of_Day] <= 5)"
+          },
+          {
+            "name": "Nighttime Fraud Rate %",
+            "expression": "DIVIDE([Nighttime Fraud Count], CALCULATE([Total Transactions], Fact_Transactions[Hour_Of_Day] >= 0 && Fact_Transactions[Hour_Of_Day] <= 5), 0) * 100",
+            "formatString": "0.000%"
+          },
+          {
+            "name": "RF Fraud Catch Rate %",
+            "expression": "81.63",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "RF Precision %",
+            "expression": "75.47",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "False Alarm Reduction %",
+            "expression": "98.26",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Prevented Fraud Loss USD",
+            "expression": "[Fraud Loss USD] * 0.8163",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Net Economic Value Delivered USD",
+            "expression": "[Prevented Fraud Loss USD] + 73300",
+            "formatString": "$#,##0.00"
+          }
+        ]
+      },
+      {
+        "name": "Dim_Time_Analysis",
+        "columns": [
+          {
+            "name": "Hour_Of_Day",
+            "dataType": "int64",
+            "sourceColumn": "Hour_Of_Day"
+          },
+          {
+            "name": "Hour_Label",
+            "dataType": "string",
+            "sourceColumn": "Hour_Label"
+          },
+          {
+            "name": "Time_Period",
+            "dataType": "string",
+            "sourceColumn": "Time_Period"
+          },
+          {
+            "name": "Is_Vulnerability_Window",
+            "dataType": "string",
+            "sourceColumn": "Is_Vulnerability_Window"
+          },
+          {
+            "name": "Total_Transactions",
+            "dataType": "int64",
+            "sourceColumn": "Total_Transactions"
+          },
+          {
+            "name": "Fraud_Count",
+            "dataType": "int64",
+            "sourceColumn": "Fraud_Count"
+          },
+          {
+            "name": "Fraud_Rate_Pct",
+            "dataType": "double",
+            "sourceColumn": "Fraud_Rate_Pct",
+            "formatString": "0.000%"
+          },
+          {
+            "name": "Diurnal_Risk_Multiplier",
+            "dataType": "double",
+            "sourceColumn": "Diurnal_Risk_Multiplier",
+            "formatString": "0.0x"
+          },
+          {
+            "name": "Total_Volume_USD",
+            "dataType": "double",
+            "sourceColumn": "Total_Volume_USD",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Fraud_Loss_USD",
+            "dataType": "double",
+            "sourceColumn": "Fraud_Loss_USD",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Recommended_Protocol",
+            "dataType": "string",
+            "sourceColumn": "Recommended_Protocol"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Dim_Time_Analysis-Partition",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:/Users/Aditya/Downloads/Infyntrex internship/Transactional Fraud Detection Analysis/PowerBI/data/Dim_Time_Analysis.csv\"), [Delimiter=\",\", Columns=11, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{",
+                "        {\"Hour_Of_Day\", Int64.Type}, {\"Hour_Label\", type text}, {\"Time_Period\", type text},",
+                "        {\"Is_Vulnerability_Window\", type text}, {\"Total_Transactions\", Int64.Type}, {\"Fraud_Count\", Int64.Type},",
+                "        {\"Fraud_Rate_Pct\", type number}, {\"Diurnal_Risk_Multiplier\", type number}, {\"Total_Volume_USD\", type number},",
+                "        {\"Fraud_Loss_USD\", type number}, {\"Recommended_Protocol\", type text}",
+                "    })",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_Amount_Segments",
+        "columns": [
+          {
+            "name": "Band_ID",
+            "dataType": "int64",
+            "sourceColumn": "Band_ID"
+          },
+          {
+            "name": "Band_Label",
+            "dataType": "string",
+            "sourceColumn": "Band_Label"
+          },
+          {
+            "name": "Min_Amount",
+            "dataType": "double",
+            "sourceColumn": "Min_Amount",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Max_Amount",
+            "dataType": "double",
+            "sourceColumn": "Max_Amount",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Modus_Operandi",
+            "dataType": "string",
+            "sourceColumn": "Modus_Operandi"
+          },
+          {
+            "name": "Typical_Action",
+            "dataType": "string",
+            "sourceColumn": "Typical_Action"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Dim_Amount_Segments-Partition",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:/Users/Aditya/Downloads/Infyntrex internship/Transactional Fraud Detection Analysis/PowerBI/data/Dim_Amount_Segments.csv\"), [Delimiter=\",\", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{",
+                "        {\"Band_ID\", Int64.Type}, {\"Band_Label\", type text}, {\"Min_Amount\", type number},",
+                "        {\"Max_Amount\", type number}, {\"Modus_Operandi\", type text}, {\"Typical_Action\", type text}",
+                "    })",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_Risk_Tiers",
+        "columns": [
+          {
+            "name": "Tier_ID",
+            "dataType": "int64",
+            "sourceColumn": "Tier_ID"
+          },
+          {
+            "name": "Tier_Name",
+            "dataType": "string",
+            "sourceColumn": "Tier_Name"
+          },
+          {
+            "name": "Risk_Min",
+            "dataType": "double",
+            "sourceColumn": "Risk_Min"
+          },
+          {
+            "name": "Risk_Max",
+            "dataType": "double",
+            "sourceColumn": "Risk_Max"
+          },
+          {
+            "name": "Policy_Action",
+            "dataType": "string",
+            "sourceColumn": "Policy_Action"
+          },
+          {
+            "name": "Coverage_Volume_Pct",
+            "dataType": "double",
+            "sourceColumn": "Coverage_Volume_Pct",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Customer_Friction",
+            "dataType": "string",
+            "sourceColumn": "Customer_Friction"
+          },
+          {
+            "name": "False_Alarm_Risk",
+            "dataType": "string",
+            "sourceColumn": "False_Alarm_Risk"
+          },
+          {
+            "name": "SLA_Response",
+            "dataType": "string",
+            "sourceColumn": "SLA_Response"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Dim_Risk_Tiers-Partition",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:/Users/Aditya/Downloads/Infyntrex internship/Transactional Fraud Detection Analysis/PowerBI/data/Dim_Risk_Tiers.csv\"), [Delimiter=\",\", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{",
+                "        {\"Tier_ID\", Int64.Type}, {\"Tier_Name\", type text}, {\"Risk_Min\", type number},",
+                "        {\"Risk_Max\", type number}, {\"Policy_Action\", type text}, {\"Coverage_Volume_Pct\", type number},",
+                "        {\"Customer_Friction\", type text}, {\"False_Alarm_Risk\", type text}, {\"SLA_Response\", type text}",
+                "    })",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Fact_Model_Benchmark",
+        "columns": [
+          {
+            "name": "Model_Name",
+            "dataType": "string",
+            "sourceColumn": "Model_Name"
+          },
+          {
+            "name": "Architecture",
+            "dataType": "string",
+            "sourceColumn": "Architecture"
+          },
+          {
+            "name": "Accuracy_Pct",
+            "dataType": "double",
+            "sourceColumn": "Accuracy_Pct",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Precision_Pct",
+            "dataType": "double",
+            "sourceColumn": "Precision_Pct",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Recall_Catch_Rate_Pct",
+            "dataType": "double",
+            "sourceColumn": "Recall_Catch_Rate_Pct",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "F1_Score",
+            "dataType": "double",
+            "sourceColumn": "F1_Score",
+            "formatString": "0.0000"
+          },
+          {
+            "name": "ROC_AUC",
+            "dataType": "double",
+            "sourceColumn": "ROC_AUC",
+            "formatString": "0.0000"
+          },
+          {
+            "name": "PR_AUC",
+            "dataType": "double",
+            "sourceColumn": "PR_AUC",
+            "formatString": "0.0000"
+          },
+          {
+            "name": "Test_Sample_Size",
+            "dataType": "int64",
+            "sourceColumn": "Test_Sample_Size"
+          },
+          {
+            "name": "Actual_Frauds_In_Test",
+            "dataType": "int64",
+            "sourceColumn": "Actual_Frauds_In_Test"
+          },
+          {
+            "name": "True_Positives_Caught",
+            "dataType": "int64",
+            "sourceColumn": "True_Positives_Caught"
+          },
+          {
+            "name": "False_Positives_Alarms",
+            "dataType": "int64",
+            "sourceColumn": "False_Positives_Alarms"
+          },
+          {
+            "name": "False_Negatives_Missed",
+            "dataType": "int64",
+            "sourceColumn": "False_Negatives_Missed"
+          },
+          {
+            "name": "True_Negatives_Cleared",
+            "dataType": "int64",
+            "sourceColumn": "True_Negatives_Cleared"
+          },
+          {
+            "name": "False_Alarm_Ratio",
+            "dataType": "string",
+            "sourceColumn": "False_Alarm_Ratio"
+          },
+          {
+            "name": "Direct_Fraud_Loss_Prevented_USD",
+            "dataType": "double",
+            "sourceColumn": "Direct_Fraud_Loss_Prevented_USD",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Manual_Review_Overhead_Hours",
+            "dataType": "double",
+            "sourceColumn": "Manual_Review_Overhead_Hours",
+            "formatString": "#,##0.0 hrs"
+          },
+          {
+            "name": "Operational_Review_Cost_USD",
+            "dataType": "double",
+            "sourceColumn": "Operational_Review_Cost_USD",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Net_Economic_Value_USD",
+            "dataType": "double",
+            "sourceColumn": "Net_Economic_Value_USD",
+            "formatString": "$#,##0.00"
+          },
+          {
+            "name": "Verdict",
+            "dataType": "string",
+            "sourceColumn": "Verdict"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Fact_Model_Benchmark-Partition",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:/Users/Aditya/Downloads/Infyntrex internship/Transactional Fraud Detection Analysis/PowerBI/data/Fact_Model_Benchmark.csv\"), [Delimiter=\",\", Columns=20, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{",
+                "        {\"Model_Name\", type text}, {\"Architecture\", type text}, {\"Accuracy_Pct\", type number},",
+                "        {\"Precision_Pct\", type number}, {\"Recall_Catch_Rate_Pct\", type number}, {\"F1_Score\", type number},",
+                "        {\"ROC_AUC\", type number}, {\"PR_AUC\", type number}, {\"Test_Sample_Size\", Int64.Type},",
+                "        {\"Actual_Frauds_In_Test\", Int64.Type}, {\"True_Positives_Caught\", Int64.Type},",
+                "        {\"False_Positives_Alarms\", Int64.Type}, {\"False_Negatives_Missed\", Int64.Type},",
+                "        {\"True_Negatives_Cleared\", Int64.Type}, {\"False_Alarm_Ratio\", type text},",
+                "        {\"Direct_Fraud_Loss_Prevented_USD\", type number}, {\"Manual_Review_Overhead_Hours\", type number},",
+                "        {\"Operational_Review_Cost_USD\", type number}, {\"Net_Economic_Value_USD\", type number},",
+                "        {\"Verdict\", type text}",
+                "    })",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_Feature_Drivers",
+        "columns": [
+          {
+            "name": "Feature_Name",
+            "dataType": "string",
+            "sourceColumn": "Feature_Name"
+          },
+          {
+            "name": "Correlation_With_Fraud",
+            "dataType": "double",
+            "sourceColumn": "Correlation_With_Fraud",
+            "formatString": "+0.0000;-0.0000;0.0000"
+          },
+          {
+            "name": "RF_Importance_Pct",
+            "dataType": "double",
+            "sourceColumn": "RF_Importance_Pct",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Indicator_Type",
+            "dataType": "string",
+            "sourceColumn": "Indicator_Type"
+          },
+          {
+            "name": "Interpretation",
+            "dataType": "string",
+            "sourceColumn": "Interpretation"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Dim_Feature_Drivers-Partition",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:/Users/Aditya/Downloads/Infyntrex internship/Transactional Fraud Detection Analysis/PowerBI/data/Dim_Feature_Drivers.csv\"), [Delimiter=\",\", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{",
+                "        {\"Feature_Name\", type text}, {\"Correlation_With_Fraud\", type number}, {\"RF_Importance_Pct\", type number},",
+                "        {\"Indicator_Type\", type text}, {\"Interpretation\", type text}",
+                "    })",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "Rel_Fact_DimTime",
+        "fromTable": "Fact_Transactions",
+        "fromColumn": "Hour_Of_Day",
+        "toTable": "Dim_Time_Analysis",
+        "toColumn": "Hour_Of_Day"
+      },
+      {
+        "name": "Rel_Fact_DimAmount",
+        "fromTable": "Fact_Transactions",
+        "fromColumn": "Amount_Band",
+        "toTable": "Dim_Amount_Segments",
+        "toColumn": "Band_Label"
+      },
+      {
+        "name": "Rel_Fact_DimTier",
+        "fromTable": "Fact_Transactions",
+        "fromColumn": "Risk_Tier",
+        "toTable": "Dim_Risk_Tiers",
+        "toColumn": "Tier_Name"
+      }
+    ]
+  }
+}

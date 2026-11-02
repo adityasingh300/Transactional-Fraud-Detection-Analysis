@@ -1,0 +1,174 @@
+{
+    "name": "Corporate Fintech Executive Dark Theme",
+    "dataColors": [
+        "#2563EB",
+        "#EF4444",
+        "#10B981",
+        "#F59E0B",
+        "#64748B",
+        "#06B6D4",
+        "#8B5CF6",
+        "#EC4899"
+    ],
+    "background": "#0F172A",
+    "foreground": "#F8FAFC",
+    "tableAccent": "#1E293B",
+    "visualStyles": {
+        "*": {
+            "*": {
+                "background": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#1E293B"
+                            }
+                        },
+                        "transparency": 0
+                    }
+                ],
+                "border": [
+                    {
+                        "show": true,
+                        "color": {
+                            "solid": {
+                                "color": "#334155"
+                            }
+                        },
+                        "radius": 8,
+                        "weight": 1
+                    }
+                ],
+                "dropShadow": [
+                    {
+                        "show": true,
+                        "color": {
+                            "solid": {
+                                "color": "#000000"
+                            }
+                        },
+                        "transparency": 70,
+                        "angle": 90,
+                        "distance": 3,
+                        "blur": 6
+                    }
+                ],
+                "title": [
+                    {
+                        "show": true,
+                        "fontColor": {
+                            "solid": {
+                                "color": "#F8FAFC"
+                            }
+                        },
+                        "fontFamily": "Segoe UI Semibold",
+                        "fontSize": 12,
+                        "alignment": "Left"
+                    }
+                ],
+                "subTitle": [
+                    {
+                        "show": true,
+                        "fontColor": {
+                            "solid": {
+                                "color": "#94A3B8"
+                            }
+                        },
+                        "fontFamily": "Segoe UI",
+                        "fontSize": 10
+                    }
+                ],
+                "labels": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#94A3B8"
+                            }
+                        },
+                        "fontFamily": "Segoe UI",
+                        "fontSize": 9
+                    }
+                ]
+            }
+        },
+        "page": {
+            "*": {
+                "background": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#0F172A"
+                            }
+                        },
+                        "transparency": 0
+                    }
+                ],
+                "wallpaper": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#0B1120"
+                            }
+                        },
+                        "transparency": 0
+                    }
+                ]
+            }
+        },
+        "card": {
+            "*": {
+                "cardTitle": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#94A3B8"
+                            }
+                        },
+                        "fontSize": 10,
+                        "fontFamily": "Segoe UI"
+                    }
+                ],
+                "cardDataLabel": [
+                    {
+                        "color": {
+                            "solid": {
+                                "color": "#F8FAFC"
+                            }
+                        },
+                        "fontSize": 24,
+                        "fontFamily": "Segoe UI Semibold"
+                    }
+                ]
+            }
+        },
+        "slicer": {
+            "*": {
+                "header": [
+                    {
+                        "fontColor": {
+                            "solid": {
+                                "color": "#F8FAFC"
+                            }
+                        },
+                        "fontFamily": "Segoe UI Semibold",
+                        "textSize": 11
+                    }
+                ],
+                "items": [
+                    {
+                        "fontColor": {
+                            "solid": {
+                                "color": "#E2E8F0"
+                            }
+                        },
+                        "background": {
+                            "solid": {
+                                "color": "#1E293B"
+                            }
+                        },
+                        "textSize": 10
+                    }
+                ]
+            }
+        }
+    }
+}
